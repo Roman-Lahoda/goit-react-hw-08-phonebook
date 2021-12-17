@@ -1,6 +1,5 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
-// import contactsReducer from "./contacts/contacts-reducer";
 import {
   persistStore,
   persistReducer,
@@ -15,12 +14,6 @@ import {
 import contactsReducer from "./contacts/contacts-slice";
 import authReducer from "./auth/auth-slice";
 
-// const myMiddleware = (store) => (next) => (action) => {
-//   console.log("my middleware");
-
-//   next(action);
-// };
-
 const middleware = [
   ...getDefaultMiddleware({
     serializableCheck: {
@@ -32,7 +25,6 @@ const middleware = [
 const contactsPersistConfig = {
   key: "token",
   storage,
-  // blacklist: ["filter"],
   whitelist: ["token"],
 };
 
@@ -45,7 +37,6 @@ const store = configureStore({
   },
   devtools: true,
   middleware,
-  // devtools: process.env.NODE_ENV === "development",
 });
 
 const persistor = persistStore(store);

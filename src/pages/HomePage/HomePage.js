@@ -1,14 +1,37 @@
-import s from "./HomePage.module.css";
+import { Typography, Link } from "@mui/material";
+import {
+  StyledTypigraphyMainText,
+  StyledBox,
+  StyledBoxBottom,
+} from "./HomePage.style";
 
 const HomePage = () => {
   return (
     <>
-      <h1 className={s.text}>Hello, dear User!</h1>
-      <h3 className={s.text}>Enjoy using this phone book</h3>
-      <p className={`${s.text} ${s.textBelow}`}>
-        Now this page is ampty ,but maybe soon you will can see something
-        interesting there ;)
-      </p>
+      <Typography variant="h4" component="h1" sx={{ textAlign: "center" }}>
+        Hello, dear User!
+      </Typography>
+      <StyledBox>
+        <StyledTypigraphyMainText>
+          Please read this text to the end.
+          <br />
+          This website was created for a learning goal. So don't use him for
+          storage important contacts, because he clean himself every three
+          month.
+          <br /> If this dont stopping you - i wish you good luck and enjoible
+          to use ;)
+        </StyledTypigraphyMainText>
+      </StyledBox>
+      <StyledBoxBottom>
+        <Typography component="span">Create by </Typography>
+        <Link
+          href="https://github.com/Roman-Lahoda"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          LaRI
+        </Link>
+      </StyledBoxBottom>
     </>
   );
 };

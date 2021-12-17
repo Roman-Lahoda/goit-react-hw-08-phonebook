@@ -1,11 +1,11 @@
 import LoginForm from "../../component/LoginForm/LoginForm";
-import s from "./LoginPage.module.css";
+import { StyledBox } from "./LoginPage.style";
 
 const LoginPage = () => {
   return (
-    <div className={s.box}>
+    <StyledBox>
       <LoginForm />
-    </div>
+    </StyledBox>
   );
 };
 

@@ -1,31 +1,40 @@
 import React from "react";
-import s from "./Filter.module.css";
+// import s from "./Filter.module.css";
 import { useSelector, useDispatch } from "react-redux";
 // import * as actions from "../../redux/contacts/contacts-actions";
 import { contactsSelector } from "../../redux/contacts/";
 import { changeFilters } from "../../redux/contacts/contacts-slice";
+import { IconButton } from "@mui/material";
+
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
+import { StyledOutlinedInput } from "./Filter.style";
 
 const Filter = () => {
   const filter = useSelector(contactsSelector.getFilter);
-  // console.log(filter);
   const dispatch = useDispatch();
-  // const hadleChange = (e) => {
-  //   console.log(e.target.value);
-  //   dispatch(changeFilters(e.target.value));
-  // };
 
   return (
-    <label className={s.label}>
-      Find contacts by name
-      <input
-        className={s.input}
-        type="text"
+    <>
+      <StyledOutlinedInput
+        placeholder="Find contact by name"
+        id="filter"
         name="filter"
+        type="text"
+        variant="outlined"
+        margin="normal"
         value={filter}
         onChange={(e) => dispatch(changeFilters(e.target.value))}
-        // onChange={hadleChange}
-      ></input>
-    </label>
+        autoComplete="off"
+        endAdornment={
+          <InputAdornment position="end" disabled>
+            <IconButton disabled edge="end">
+              <SearchIcon />
+            </IconButton>
+          </InputAdornment>
+        }
+      />
+    </>
   );
 };
 

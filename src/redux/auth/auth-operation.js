@@ -2,6 +2,8 @@ import axios from "axios";
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+import notification from "../../utils/notification";
+
 axios.defaults.baseURL = "https://connections-api.herokuapp.com";
 const token = {
   set(token) {
@@ -17,9 +19,13 @@ export const signUp = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const { data } = await axios.post("/users/signup", userData);
-      console.log(data);
+      token.set(data.token);
+      notification.SignupSuccess(data.user.name);
       return data;
     } catch (error) {
+      // notification.SignupError();
+      console.log("error", error);
+      notification.SignupError();
       return rejectWithValue(error);
     }
   }
@@ -31,8 +37,10 @@ export const logIn = createAsyncThunk(
     try {
       const { data } = await axios.post("/users/login", userData);
       token.set(data.token);
+      notification.LoginSuccess(data.user.name);
       return data;
     } catch (error) {
+      notification.LoginError();
       return rejectWithValue(error);
     }
   }
@@ -44,7 +52,9 @@ export const logOut = createAsyncThunk(
     try {
       await axios.post("/users/logout");
       token.unset();
+      notification.LogoutSuccess();
     } catch (error) {
+      notification.LogoutError();
       return rejectWithValue(error);
     }
   }
@@ -54,17 +64,10 @@ export const refresh = createAsyncThunk(
   "user/refresh",
   async (_, { getState, rejectWithValue }) => {
     const state = getState();
-    // console.log("state :", state);
     const persistedToken = state.auth.token;
-    // console.log(persistedToken);
     if (persistedToken === null) {
-      // console.log("Возвращаемся с refresh");
-      // return;
       return rejectWithValue({ status: null, statusText: "Token not found" });
-      // return rejectWithValue(5);
-      // return state;
     }
-    // console.log("after if");
     token.set(persistedToken);
     try {
       const { data } = await axios.get("/users/current");

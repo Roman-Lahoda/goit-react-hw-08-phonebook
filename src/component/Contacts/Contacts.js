@@ -1,16 +1,24 @@
-import { NavLink } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { Suspense } from "react";
 import { lazy } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import authSelectors from "../../redux/auth/auth-selector";
 import authOperation from "../../redux/auth/auth-operation.js";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import UserMenu from "../UserMenu/UserMenu";
-import s from "./Contacts.module.css";
+
+import { AppBar, Menu, IconButton, CircularProgress } from "@mui/material";
+
+import HomeIcon from "@mui/icons-material/Home";
+import ContactsIcon from "@mui/icons-material/Contacts";
+import LoginIcon from "@mui/icons-material/Login";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
+import { StyledNavLink, StyledToolbar, StyledBox } from "./Contacts.style";
 
 const HomePage = lazy(() =>
   import("../../pages/HomePage/HomePage.js" /* webpackChunkName: "HomePage" */)
@@ -32,74 +40,104 @@ const LoginPage = lazy(() =>
 );
 
 const Contacts = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(authSelectors.getIsLoggedIn);
   const isFetchingCurrentUser = useSelector(
     authSelectors.getIsfetchingCurrentUser
   );
-  console.log(isFetchingCurrentUser);
 
   useEffect(() => {
     dispatch(authOperation.refresh());
   }, [dispatch]);
 
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     !isFetchingCurrentUser && (
       <>
-        <div className={s.AppBar}>
-          <ul className={`${s.navigation} ${s.list}`}>
-            {isLoggedIn ? (
-              <li>
-                <NavLink
-                  exact
-                  to="/contacts"
-                  className={s.link}
-                  activeClassName={s.activeLink}
-                >
-                  Phonebook
-                </NavLink>
-              </li>
-            ) : (
-              <li>
-                <NavLink
-                  exact
-                  to="/"
-                  className={s.link}
-                  activeClassName={s.activeLink}
-                >
-                  Home
-                </NavLink>
-              </li>
-            )}
-          </ul>
-          {!isLoggedIn ? (
-            <ul className={s.list}>
-              <li>
-                <NavLink
-                  exact
-                  to="/register"
-                  className={s.link}
-                  activeClassName={s.activeLink}
-                >
-                  Registration
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  exact
-                  to="/login"
-                  className={s.link}
-                  activeClassName={s.activeLink}
-                >
-                  Login
-                </NavLink>
-              </li>
+        <AppBar position="static">
+          <StyledToolbar>
+            <ul>
+              {isLoggedIn ? (
+                <li>
+                  <StyledNavLink exact to="/contacts" activeClassName="active">
+                    <ContactsIcon sx={{ width: 20, height: 20 }} />
+                    Phonebook
+                  </StyledNavLink>
+                </li>
+              ) : (
+                <li>
+                  <StyledNavLink exact to="/" activeClassName="active">
+                    <HomeIcon sx={{ width: 20, height: 20 }} />
+                    Home
+                  </StyledNavLink>
+                </li>
+              )}
             </ul>
-          ) : (
-            <UserMenu />
-          )}
-        </div>
-        <Suspense fallback={<h1>Loading...test</h1>}>
+            {!isLoggedIn ? (
+              <ul>
+                <li>
+                  <StyledNavLink exact to="/register" activeClassName="active">
+                    <AppRegistrationIcon sx={{ width: 20, height: 20 }} />
+                    Registration
+                  </StyledNavLink>
+                </li>
+                <li>
+                  <StyledNavLink exact to="/login" activeClassName="active">
+                    <LoginIcon sx={{ width: 20, height: 20 }} />
+                    Login
+                  </StyledNavLink>
+                </li>
+              </ul>
+            ) : (
+              <>
+                <IconButton>
+                  <AccountCircleIcon
+                    onClick={handleMenu}
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      cursor: "pointer",
+                      color: "#fff",
+                    }}
+                  />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <UserMenu />
+                </Menu>
+              </>
+            )}
+          </StyledToolbar>
+        </AppBar>
+
+        <Suspense
+          fallback={
+            <StyledBox>
+              <CircularProgress />
+            </StyledBox>
+          }
+        >
           <Switch>
             <PublicRoute exact redirectTo="/contacts" restricted path="/">
               <HomePage />

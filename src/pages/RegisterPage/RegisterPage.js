@@ -1,11 +1,11 @@
 import RegistrationFrom from "../../component/RegistrationForm/RegistrationForm";
-import s from "./RegisterPage.module.css";
+import { StyledBox } from "./RegisterPage.style";
 
 const RegisterPage = () => {
   return (
-    <div className={s.box}>
+    <StyledBox>
       <RegistrationFrom />
-    </div>
+    </StyledBox>
   );
 };
 export default RegisterPage;

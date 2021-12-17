@@ -2,11 +2,23 @@ import { useState } from "react";
 import authOperation from "../../redux/auth/auth-operation";
 import { useDispatch } from "react-redux";
 
-import s from "./LoginForm.module.css";
+import { StyledTypography, StyledForm, StyledButton } from "./LoginForm.style";
+import {
+  TextField,
+  InputAdornment,
+  IconButton,
+  OutlinedInput,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import LoginIcon from "@mui/icons-material/Login";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
@@ -16,49 +28,59 @@ const LoginForm = () => {
     setPassword("");
   };
 
-  const handleChange = ({ target: { name, value } }) => {
-    switch (name) {
-      case "email":
-        setEmail(value);
-        break;
-      case "password":
-        setPassword(value);
-        break;
-      default:
-        return;
-    }
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
   };
 
   return (
     <>
-      <h3 className={s.title}>Enter to phonebook</h3>
-      <form onSubmit={handleSubmit} className={s.form}>
-        <label className={s.label}>
-          Email
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={handleChange}
-            placeholder="email"
-            className={s.input}
-          />
-        </label>
-        <label className={s.label}>
-          Password
-          <input
-            type="password"
-            name="password"
+      <StyledTypography variant="h6" component="h3">
+        Login form
+      </StyledTypography>
+      <StyledForm onSubmit={handleSubmit} sx={{ width: "100%" }}>
+        <TextField
+          sx={{ mt: 1 }}
+          id="email"
+          name="email"
+          label="Email"
+          type="text"
+          variant="outlined"
+          margin="normal"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          autoComplete="off"
+        />
+        <FormControl sx={{ mt: 1 }} variant="outlined">
+          <InputLabel htmlFor="password">Password</InputLabel>
+          <OutlinedInput
+            id="password"
+            type={showPassword ? "text" : "password"}
             value={password}
-            onChange={handleChange}
-            placeholder="password"
-            className={s.input}
+            onChange={(e) => setPassword(e.target.value)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
           />
-        </label>
-        <button type="submit" className={s.btn}>
-          Login
-        </button>
-      </form>
+        </FormControl>
+        <StyledButton variant="contained" type="submit" endIcon={<LoginIcon />}>
+          Sign up
+        </StyledButton>
+      </StyledForm>
     </>
   );
 };

@@ -10,21 +10,12 @@ export const getFilteredContacts = createSelector(
   [getContacts, getFilter],
   (contacts, filter) => {
     const normalizedFilter = filter.toLowerCase();
-    // const sortByName = (a, b) => a.name - b.name;
-    // const sortedContacts = contacts.sort(sortByName);
 
-    return contacts.filter((item) =>
-      item.name.toLowerCase().includes(normalizedFilter)
-    );
+    const sortByName = (a, b) =>
+      a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+
+    return contacts
+      .filter((item) => item.name.toLowerCase().includes(normalizedFilter))
+      .sort(sortByName);
   }
 );
-
-// export const getFilteredContacts = (state) => {
-//   const filter = getFilter(state);
-//   const contacts = getContacts(state);
-//   const normalizedFilter = filter.toLowerCase();
-
-//   return contacts.filter((item) =>
-//     item.name.toLowerCase().includes(normalizedFilter)
-//   );
-// };

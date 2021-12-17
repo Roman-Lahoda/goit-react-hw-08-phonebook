@@ -49,12 +49,10 @@ const authSlice = createSlice({
       state.isLoading = false;
     },
     [refresh.pending](state, action) {
-      //   console.log("state in slice pending", state.isLoading);
       state.isFetchingCurrentUser = true;
     },
     [refresh.fulfilled](state, action) {
       state.user = action.payload;
-      //   console.log("state in slice fulfilled", action);
       state.isLoggedIn = true;
       state.isFetchingCurrentUser = false;
     },

@@ -3,8 +3,8 @@ import {
   fetchContacts,
   addContact,
   deleteContact,
+  changeContact,
 } from "./contacts-operations";
-// import { changeFilters } from "./contacts-actions";
 
 const initialState = {
   items: [],
@@ -51,6 +51,22 @@ const contactsSlice = createSlice({
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
     [deleteContact.rejected](state, action) {
+      state.error = action.payload;
+    },
+    [changeContact.pending](state, action) {
+      state.isLoading = true;
+    },
+    [changeContact.fulfilled](state, action) {
+      state.isLoading = false;
+      state.items = state.items.map((item) => {
+        if (item.id !== action.payload.id) {
+          return item;
+        }
+        return action.payload;
+      });
+    },
+    [changeContact.rejected](state, action) {
+      state.isLoading = false;
       state.error = action.payload;
     },
   },
